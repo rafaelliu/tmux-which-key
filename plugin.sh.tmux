@@ -35,6 +35,11 @@ make_xdg_path() {
     IFS=$OLDIFS
 }
 
+resolve_relative_path() {
+    # Resolve the relative path of $2 with respect to $1
+    python3 -c "import os; print(os.path.relpath('$2', '$1'))"
+}
+
 case "$(tmux show-option -gvq @tmux-which-key-xdg-enable)" in
     1 | true)
         if [ -z "$HOME" ]; then
@@ -52,7 +57,7 @@ case "$(tmux show-option -gvq @tmux-which-key-xdg-enable)" in
 
         # create the config path if it doesn't exist, ensure it is inside
         # $HOME, and simplify the path
-        xdg_config_path="$(realpath --relative-to="$HOME" "$XDG_CONFIG_HOME")/$xdg_plugin_path"
+        xdg_config_path="$(resolve_relative_path "$HOME" "$XDG_CONFIG_HOME")/$xdg_plugin_path"
         case "$xdg_config_path" in
             ../*)
                 echo "[tmux-which-key] XDG_CONFIG_HOME plugin path is outside of HOME: $HOME/$xdg_config_path"
@@ -63,7 +68,7 @@ case "$(tmux show-option -gvq @tmux-which-key-xdg-enable)" in
 
         # create the data path if it doesn't exist, ensure it is inside
         # $HOME, and simplify the path
-        xdg_data_path="$(realpath --relative-to="$HOME" "$XDG_DATA_HOME")/$xdg_plugin_path"
+        xdg_data_path="$(resolve_relative_path "$HOME" "$XDG_DATA_HOME")/$xdg_plugin_path"
         case "$xdg_data_path" in
             ../*)
                 echo "[tmux-which-key] XDG_DATA_HOME plugin path is outside of HOME: $HOME/$xdg_data_path"
@@ -105,3 +110,4 @@ esac
 
 # Load the plugin.
 tmux source-file "$init_file"
+

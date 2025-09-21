@@ -11,7 +11,8 @@ readonly menu_name=${1:-tmux}
 readonly plugins_dir="$HOME/.tmux/plugins"
 
 show_menu() {
-    tmux menu -x R -y P -T "#[align=centre,bold fg=green]$menu_name" "$@"
+    tmux menu -x R -y P -T "#[align=centre,bold fg=green]$menu_name" "$@" \
+        'Back' Backspace "$cmd_menu_reopen"
 }
 
 cmd_menu_reopen="run '$cmd_show_menu $menu_name'"

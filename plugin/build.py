@@ -210,6 +210,10 @@ class MenuItem(object):
         if self.command:
             self.command = add_quotes(self.command)
 
+        if self.parent_menu_id and self.key == "Escape":
+            self.name = "Back"
+            self.command = 'show-wk-menu #{{@wk_menu_{}}}'.format(self.parent_menu_id)
+
     def __str__(self) -> str:
         if self.separator:
             return '""'
